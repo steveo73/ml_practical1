@@ -1,4 +1,5 @@
-CREATE TABLE titanic.train_data
+use titanic;
+CREATE TABLE train_data
 (
 id MEDIUMINT NOT NULL AUTO_INCREMENT
 , survived int
@@ -16,7 +17,7 @@ id MEDIUMINT NOT NULL AUTO_INCREMENT
 )
 ;
 
-CREATE TABLE titanic.train_data_hack
+CREATE TABLE train_data_hack
 (
 id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id)
 , survived int
@@ -34,11 +35,12 @@ id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id)
 , fare double
 , fare_individual DOUBLE
 , cabin text
+, cabin_survival_ind int
 , embarked text
 )
 ;
 
-CREATE TABLE titanic.final_model
+CREATE TABLE final_model
 (
 survived int
 , pclass int
@@ -46,13 +48,20 @@ survived int
 , sex int
 , age_banding INT
 , totl_family INT
+, cabin_survival_ind INT
 )
 ;
 
-CREATE TABLE titanic.salutatory
+CREATE TABLE salutatory
 (
 salutatory text
 , name_score int
 )
 ;
 
+CREATE TABLE cabin_ind
+(
+ticket text
+, cabin_survival_ind int
+)
+;

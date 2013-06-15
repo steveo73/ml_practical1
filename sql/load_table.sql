@@ -1,3 +1,5 @@
+USE titanic;
+
 LOAD DATA LOCAL INFILE '/home/steveo/kaggle/titanic/sql/train.csv' INTO TABLE train_data
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES
 ( survived
@@ -14,9 +16,7 @@ FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES
 )
 ;
 
-load data infile '/home/user1/test.txt' into table chargertest fields terminated by ',' (name,x,y);
-
-INSERT INTO titanic.train_data_hack
+INSERT INTO train_data_hack
 (
 id
 , survived
@@ -32,12 +32,13 @@ id
 , embarked
 )
 
-Select * from titanic.train_data
+Select * from train_data
 ;
 
-INSERT INTO titanic.salutatory
+INSERT INTO salutatory
 (
 salutatory
 )
-select Substring(name from locate(',',name)+2 for (locate('.',name) - locate(',',name)-2)) from train_data group by 1;
+select Substring(name from locate(',',name)+2 for (locate('.',name) - locate(',',name)-2)) from train_data group by 1
+;
 

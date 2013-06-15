@@ -41,9 +41,42 @@ Males in class 2 & 3 should state as dead.
 select * from train_data_hack where sex = -1 and pclass =1;
 select age_banding, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where sex = -1 and pclass =1 and totl_family > 0 group by age_banding;
 
-Select * from train_data_hack where sex = -1 and pclass =1 and age_banding  = 0 and totl_family > 0; -- > this might show a relationship
+Select totl_family, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where sex = 1 and pclass =3 and totl_family > 0
+group by 1;
+Select parch, survived, name, embarked, age from train_data_hack where sex = 1 and pclass =3 and parch = 1 and age = 120;
+
+
+Select * from train_data_hack where name like '%Lefebre%';
+
+,
+; -- > this might show a relationship
 
 Select * from train_data_hack where sex = -1 and pclass =1  and name like '%Master%'  ; -> this is a winner.
+Select ticket, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where pclass =3 and sex = 1 group by 1 having SUm(1) > 1; -- another winner
+Select * from train_data_hack where ticket = '1601';
+
+Rule if female and ticket = dead then high probability death and reverse
+
+INSERT INTO titanic.cabin_ind
+(cabin
+, cabin_survival_ind
+)
+
+SELECT
+cabin
+, SUM (CASE WHEN survived = 0 THEN -1
+ELSE 1
+END ) as cabin_ind
+
+FROM titanic.train_data_hack
+
+where sex = 1 and pclass =3
+;
+
+SELECT ticket, SUM(CASE WHEN survived = 0 THEN -1 ELSE 1 END)  as cabin_ind  FROM train_data_hack  where sex = 1 group by ticket;
+
+
+
 
 
 

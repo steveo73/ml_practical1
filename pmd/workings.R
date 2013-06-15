@@ -48,7 +48,7 @@ library(e1071);
 library(glm2);
 library(gbm);
 options(stringsAsFactors = FALSE);
-setwd("/home/steveo/kaggle/titanic");
+setwd("/home/steveo/kaggle/titanic/sql");
 
 ### Training Data Set-Up
 loaddata <-read.csv("./train.csv", header = TRUE, sep = ",");

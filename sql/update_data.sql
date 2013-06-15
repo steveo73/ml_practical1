@@ -6,9 +6,10 @@ update train_data_hack set fare_individual = fare/totl_family;
 update train_data_hack set fare_individual = fare where totl_family = 0;
 update train_data_hack
 Set salutatory = Substring(name from locate(',',name)+2 for (locate('.',name) - locate(',',name)-2));
-update titanic.salutatory Set name_score = 5 where salutatory = 'Master';
-update titanic.salutatory Set name_score = 2 where salutatory = 'Sir';
-update titanic.salutatory Set name_score = 0 where name_score IS NULL;
+update salutatory Set name_score = 5 where salutatory = 'Master';
+update salutatory Set name_score = 2 where salutatory = 'Sir';
+update salutatory Set name_score = 0 where name_score IS NULL;
+update train_data_hack Set cabin_survival_ind= 0 where cabin_survival_ind IS NULL;
 
 update train_data_hack
 JOIN salutatory
@@ -33,14 +34,25 @@ set age_banding = (
     END)
   ;  
 
+INSERT INTO cabin_ind (ticket, cabin_survival_ind )
+SELECT ticket, SUM(CASE WHEN survived = 0 THEN -1 ELSE 1 END)  as cabin_ind  FROM train_data_hack  where sex = 1 group by ticket
+;
 
-INSERT INTO titanic.final_model
+update train_data_hack
+JOIN cabin_ind
+ON train_data_hack.ticket = cabin_ind.ticket
+Set train_data_hack.cabin_survival_ind = cabin_ind.cabin_survival_ind
+where   train_data_hack.sex = 1
+;
+
+INSERT INTO final_model
 (survived
 , pclass
 , name_score
 , sex
 , age_banding
 , totl_family
+, cabin_survival_ind
 )
 
 SELECT
@@ -50,5 +62,11 @@ survived
 , sex
 , age_banding
 , totl_family
+, cabin_survival_ind
 
-FROM titanic.train_data_hack
+FROM train_data_hack
+;
+
+
+
+
