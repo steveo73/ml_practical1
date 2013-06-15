@@ -1,7 +1,14 @@
+### Train Data Set
+
 source /home/steveo/kaggle/titanic/sql/drop_tables.sql;
 source /home/steveo/kaggle/titanic/sql/create_table.sql;
 source /home/steveo/kaggle/titanic/sql/load_table.sql;
 source /home/steveo/kaggle/titanic/sql/update_data.sql;
+
+### Test Data Set
+
+source /home/steveo/kaggle/titanic/sql/test_data.sql;
+source /home/steveo/kaggle/titanic/sql/update_data_test.sql;
 
 LOAD DATA LOCAL INFILE '/path/to/file.txt' INTO TABLE your-table-name;
 source /home/steveo/kaggle/titanic/create_table.sql

@@ -20,19 +20,20 @@ sub <- sample(nrow(traindata), floor(nrow(traindata) * 0.8));
 training <- traindata[sub,];
 testing <- traindata[-sub,];
 
-## SVM
+## Random Forest Model
 # build the model
-svmModel <- svm(as.factor(survived) ~ ., data = training);
-summary(svmModel);
+rfModel <- randomForest(as.factor(survived)~ .,data=traindata,  proximity = FALSE);
+summary(rfModel);
 # complete cross-validation
-svmModelpred <- predict(svmModel, newdata=testing);
-svmtable <-table(svmModelpred, testing$survived);
-svmtable;
-misclasssvm <- (sum(svmtable[row(svmtable) != col(svmtable)]) / sum(svmtable)) *100;
-misclasssvm;
-
+pred1 <- predict(rfModel, newdata=training, type="class");
+mytable <-table(pred1, testing$survived);
+mytable;
+misclass <- (sum(mytable[row(mytable) != col(mytable)]) / sum(mytable)) *100;
+misclass;
 
 # complete prediction
-predtestdatasvm <- predict(svmModel, newdata=testdata_upload, type="class");
+testdata_upload<-dbGetQuery(con, "select * from final_model_test");
+predtestdatarf <- predict(rfModel, newdata=testdata_upload, type="class");
 # extract prediction
-write.table(predtestdatasvm,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
+write.table(predtestdatarf,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
+
