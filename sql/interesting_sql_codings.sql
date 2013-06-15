@@ -1,3 +1,8 @@
+source /home/steveo/kaggle/titanic/sql/drop_tables.sql;
+source /home/steveo/kaggle/titanic/sql/create_table.sql;
+source /home/steveo/kaggle/titanic/sql/load_table.sql;
+source /home/steveo/kaggle/titanic/sql/update_data.sql;
+
 LOAD DATA LOCAL INFILE '/path/to/file.txt' INTO TABLE your-table-name;
 source /home/steveo/kaggle/titanic/create_table.sql
 select sex, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack group by sex;
