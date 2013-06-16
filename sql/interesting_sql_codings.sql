@@ -28,7 +28,7 @@ select sex, pclass, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1
 +------+--------+------+-------+---------------+
 3 rows in set (0.00 sec)
 
-MariaDB [titanic]> select sex, pclass, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where sex = 1 group by sex, pclass;
+select sex, pclass, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where sex = 1 group by sex, pclass;
 +------+--------+------+-------+---------------+
 | sex  | pclass | surv | total | percent_lives |
 +------+--------+------+-------+---------------+
@@ -43,6 +43,8 @@ Males in class 2 & 3 should state as dead.
 2 interesting areas to focus on:-
 1. Females in 3rd class
 2. Males in 1st class
+
+select age_banding, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where sex = 1 and pclass = 3 group by sex, age_banding;
 
 
 select * from train_data_hack where sex = -1 and pclass =1;
@@ -61,6 +63,9 @@ Select * from train_data_hack where name like '%Lefebre%';
 Select * from train_data_hack where sex = -1 and pclass =1  and name like '%Master%'  ; -> this is a winner.
 Select ticket, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where pclass =3 and sex = 1 group by 1 having SUm(1) > 1; -- another winner
 Select * from train_data_hack where ticket = '1601';
+
+
+select name_score, age_banding, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives  from train_data_hack where sex = -1 and pclass = 1 group by name_score , age_banding;
 
 Rule if female and ticket = dead then high probability death and reverse
 
@@ -84,6 +89,31 @@ SELECT ticket, SUM(CASE WHEN survived = 0 THEN -1 ELSE 1 END)  as cabin_ind  FRO
 
 
 
+select salutatory, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack group by 1 where pclass =3 and sex = -1;
+
+select salutatory, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives from train_data_hack where sex = -1 and pclass = 3 group by 1;
+
+Select age_banding, totl_family, cabin_survival_ind, Sum(survived) as surv, SUm(1)  as total, SUm(survived)/Sum(1) as percent_lives
+from train_data_hack 
+where sex = 1 and pclass = 3 and salutatory = 'Miss' and  cabin_survival_ind < 1
+group by 1,2,3
+;
 
 
-
+select * from cabin_ind where ticket in
+(
+'PC 17597'
+, '13236'
+, 'PC 17594'
+, '2543'
+, '113780'
+, '11778'
+, '111163'
+, 'F.C. 12998'
+, '16966'
+, '21228'
+, 'PC 17607'
+, '33638'
+, '112058'
+, '17765'
+)

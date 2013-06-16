@@ -85,9 +85,13 @@ survived int
 , pclass int
 , name_score int
 , sex int
-, age_banding INT
-, totl_family INT
-, cabin_survival_ind INT
+, age int
+, age_banding int
+, sibsp int
+, parch int
+, totl_family int
+, cabin_survival_ind int
+, weighting int
 )
 ;
 
@@ -96,9 +100,13 @@ CREATE TABLE final_model_test
 pclass int
 , name_score int
 , sex int
-, age_banding INT
-, totl_family INT
-, cabin_survival_ind INT
+, age int
+, age_banding int
+, sibsp int
+, parch int
+, totl_family int
+, cabin_survival_ind int
+, weighting int
 )
 ;
 

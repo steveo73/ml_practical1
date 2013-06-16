@@ -1,6 +1,6 @@
 USE titanic;
 
-LOAD DATA LOCAL INFILE '/home/steveo/kaggle/titanic/sql/train_combined.csv' INTO TABLE train_data
+LOAD DATA LOCAL INFILE '/home/steveo/kaggle/titanic/sql/train.csv' INTO TABLE train_data
 FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 LINES
 ( survived
 , pclass

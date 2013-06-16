@@ -1,12 +1,21 @@
 # set-up environment
 rm(list=ls());
-library(ggplot2); 
+# create reg to class function
+regclass <- function(rlist){
+  x <- 0
+  for (i in 1:length(rlist))
+    if(rlist[i]>.5){
+      x <- append(x, 1, after = i-1)
+    } else{
+      x <- append(x, 0, after = i-1)
+    }
+  
+  return (x[1:length(x)-1])
+};
+# get libraries
 library(RMySQL); 
-library(randomForest);
-library(tree);
-library(e1071);
 library(glm2);
-library(gbm);
+library(e1071);
 options(stringsAsFactors = FALSE);
 setwd("/home/steveo/kaggle/titanic/sql");
 
@@ -20,20 +29,34 @@ sub <- sample(nrow(traindata), floor(nrow(traindata) * 0.8));
 training <- traindata[sub,];
 testing <- traindata[-sub,];
 
-## Random Forest Model
-# build the model
-rfModel <- randomForest(as.factor(survived)~ .,data=traindata,  proximity = FALSE);
-summary(rfModel);
+## Logistic Regression
+glmModel <- glm(survived ~ sex + pclass + name_score + cabin_survival_ind , data = training);
+summary(glmModel);
 # complete cross-validation
-pred1 <- predict(rfModel, newdata=training, type="class");
-mytable <-table(pred1, testing$survived);
-mytable;
-misclass <- (sum(mytable[row(mytable) != col(mytable)]) / sum(mytable)) *100;
-misclass;
+glmModelpred <- predict(glmModel, newdata=testing, type='response');
+# get classifications
+glmModelclass <- regclass(glmModelpred);
+glmtable <-table(glmModelclass, testing$survived); 
+misclassglm <- (sum(glmtable[row(glmtable) != col(glmtable)]) / sum(glmtable)) *100;
+misclassglm;
 
 # complete prediction
 testdata_upload<-dbGetQuery(con, "select * from final_model_test");
-predtestdatarf <- predict(rfModel, newdata=testdata_upload, type="class");
+predtestdatalgr <- round(predict(glmModel, newdata=testdata_upload, type='response'),0);
 # extract prediction
-write.table(predtestdatarf,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
+write.table(predtestdatalgr,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
 
+## SVM
+# build the model
+svmModel <- svm(as.factor(survived) ~ ., data = training);
+summary(svmModel);
+# complete cross-validation
+svmModelpred <- predict(svmModel, newdata=testing);
+svmtable <-table(svmModelpred, testing$survived);
+misclasssvm <- (sum(svmtable[row(svmtable) != col(svmtable)]) / sum(svmtable)) *100;
+misclasssvm;
+# complete prediction
+testdata_upload<-dbGetQuery(con, "select * from final_model_test");
+predtestdatasvm <- predict(svmModel, newdata=testdata_upload, type="class");
+# extract prediction
+write.table(predtestdatasvm,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
