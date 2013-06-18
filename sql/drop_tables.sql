@@ -7,5 +7,5 @@ drop table  train_data_hack_test;
 drop table  salutatory;
 drop table  final_model;
 drop table  final_model_test;
-drop table  cabin_ind;
+drop table  ticket;
 

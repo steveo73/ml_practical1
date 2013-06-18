@@ -52,7 +52,8 @@ id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id)
 , fare double
 , fare_individual DOUBLE
 , cabin text
-, cabin_survival_ind int
+, ticket_ind int
+, cabin_ind int
 , embarked text
 )
 ;
@@ -74,7 +75,8 @@ id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id)
 , fare double
 , fare_individual DOUBLE
 , cabin text
-, cabin_survival_ind int
+, ticket_ind int
+, cabin_ind int
 , embarked text
 )
 ;
@@ -85,13 +87,9 @@ survived int
 , pclass int
 , name_score int
 , sex int
-, age int
 , age_banding int
-, sibsp int
-, parch int
-, totl_family int
-, cabin_survival_ind int
-, weighting int
+, ticket_ind int
+, cabin_ind int
 )
 ;
 
@@ -100,13 +98,9 @@ CREATE TABLE final_model_test
 pclass int
 , name_score int
 , sex int
-, age int
 , age_banding int
-, sibsp int
-, parch int
-, totl_family int
-, cabin_survival_ind int
-, weighting int
+, ticket_ind int
+, cabin_ind int
 )
 ;
 
@@ -117,10 +111,10 @@ salutatory text
 )
 ;
 
-CREATE TABLE cabin_ind
+CREATE TABLE ticket
 (
 ticket text
-, cabin_survival_ind int
+, ticket_ind int
 )
 ;
 

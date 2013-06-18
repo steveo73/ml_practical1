@@ -25,38 +25,54 @@ con<-dbConnect(m,dbname='titanic');
 traindata<-dbGetQuery(con, "select * from final_model");
 
 #split the data into train/validate data-sets
-sub <- sample(nrow(traindata), floor(nrow(traindata) * 0.8));
+sub <- sample(nrow(traindata), floor(nrow(traindata) * 1.0));
 training <- traindata[sub,];
 testing <- traindata[-sub,];
 
 ## Logistic Regression
-glmModel <- glm(survived ~ sex + pclass + name_score + cabin_survival_ind , data = training);
-summary(glmModel);
+glmModel <- glm(survived ~ . , data = training);
 # complete cross-validation
-glmModelpred <- predict(glmModel, newdata=testing, type='response');
-# get classifications
-glmModelclass <- regclass(glmModelpred);
-glmtable <-table(glmModelclass, testing$survived); 
+glmModelpred <- predict(glmModel, newdata=training, type='response');
+glmModelround <- regclass(glmModelpred);
+glmtable <-table(glmModelround, training$survived); 
 misclassglm <- (sum(glmtable[row(glmtable) != col(glmtable)]) / sum(glmtable)) *100;
 misclassglm;
 
-# complete prediction
+# complete upload prediction -- logistic regression
 testdata_upload<-dbGetQuery(con, "select * from final_model_test");
-predtestdatalgr <- round(predict(glmModel, newdata=testdata_upload, type='response'),0);
+predtestdatalgr <- regclass(predict(glmModel, newdata=testdata_upload, type='response'));
 # extract prediction
 write.table(predtestdatalgr,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
 
 ## SVM
 # build the model
-svmModel <- svm(as.factor(survived) ~ ., data = training);
-summary(svmModel);
+svmModel <- svm(survived ~ . , data = training);
 # complete cross-validation
-svmModelpred <- predict(svmModel, newdata=testing);
-svmtable <-table(svmModelpred, testing$survived);
+svmModelpred <- predict(svmModel, newdata=training);
+svmModelround <- regclass(svmModelpred);
+svmtable <-table(svmModelround, training$survived);
 misclasssvm <- (sum(svmtable[row(svmtable) != col(svmtable)]) / sum(svmtable)) *100;
 misclasssvm;
-# complete prediction
+
+# complete upload prediction - svm
 testdata_upload<-dbGetQuery(con, "select * from final_model_test");
-predtestdatasvm <- predict(svmModel, newdata=testdata_upload, type="class");
+predtestdatasvm <- regclass(predict(svmModel, newdata=testdata_upload));
 # extract prediction
 write.table(predtestdatasvm,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
+
+# Ensemble + validation
+enstable <- table(regclass(.5 * glmModelpred + .5 * svmModelpred));
+misclassens <- (sum(enstable[row(enstable) != col(enstable)]) / sum(enstable)) *100;
+misclassens;
+
+# complete upload prediction - ensemble
+# get data
+testdata_upload<-dbGetQuery(con, "select * from final_model_test");
+# run predictions
+ensglm <- predict(glmModel, newdata=testdata_upload, type='response');
+enssvm <- predict(svmModel, newdata=testdata_upload);
+# complete ensemble
+predtestdataen <- regclass(.4 * ensglm + .6 * enssvm);
+# extract prediction
+write.table(predtestdataen,file = "stevesprediction.csv", row.names = FALSE, col.names = FALSE);
+
